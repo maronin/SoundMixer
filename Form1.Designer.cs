@@ -39,9 +39,9 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnPrevious = new System.Windows.Forms.PictureBox();
             this.btnPlay = new System.Windows.Forms.PictureBox();
-            this.btnPause = new System.Windows.Forms.PictureBox();
             this.btnStop = new System.Windows.Forms.PictureBox();
             this.btnNext = new System.Windows.Forms.PictureBox();
+            this.btnPause = new System.Windows.Forms.PictureBox();
             this.trackFileLocation = new System.Windows.Forms.TrackBar();
             this.trackBarVolume = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
@@ -57,9 +57,9 @@
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnPrevious)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnPlay)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnPause)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnStop)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnNext)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnPause)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackFileLocation)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.loadingIcon)).BeginInit();
@@ -95,7 +95,6 @@
             this.volumeSlider.Name = "volumeSlider";
             this.volumeSlider.Size = new System.Drawing.Size(125, 23);
             this.volumeSlider.TabIndex = 10;
-            this.volumeSlider.Volume = 1F;
             this.volumeSlider.VolumeChanged += new System.EventHandler(this.volumeSlider_VolumeChanged);
             // 
             // waveformPainter1
@@ -183,20 +182,6 @@
             this.btnPlay.TabStop = false;
             this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
             // 
-            // btnPause
-            // 
-            this.btnPause.BackgroundImage = global::SoundWiz.Properties.Resources.Pause;
-            this.btnPause.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnPause.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnPause.Location = new System.Drawing.Point(321, -1);
-            this.btnPause.Name = "btnPause";
-            this.btnPause.Size = new System.Drawing.Size(38, 56);
-            this.btnPause.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.btnPause.TabIndex = 0;
-            this.btnPause.TabStop = false;
-            this.btnPause.Visible = false;
-            this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
-            // 
             // btnStop
             // 
             this.btnStop.BackgroundImage = global::SoundWiz.Properties.Resources.Stop;
@@ -218,6 +203,20 @@
             this.btnNext.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnNext.TabIndex = 0;
             this.btnNext.TabStop = false;
+            // 
+            // btnPause
+            // 
+            this.btnPause.BackgroundImage = global::SoundWiz.Properties.Resources.Pause;
+            this.btnPause.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnPause.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnPause.Location = new System.Drawing.Point(322, -2);
+            this.btnPause.Name = "btnPause";
+            this.btnPause.Size = new System.Drawing.Size(38, 56);
+            this.btnPause.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnPause.TabIndex = 0;
+            this.btnPause.TabStop = false;
+            this.btnPause.Visible = false;
+            this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
             // 
             // trackFileLocation
             // 
@@ -366,9 +365,9 @@
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnPrevious)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnPlay)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnPause)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnStop)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnNext)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnPause)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackFileLocation)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarVolume)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.loadingIcon)).EndInit();

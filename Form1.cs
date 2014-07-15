@@ -74,7 +74,7 @@ namespace SoundWiz
 
 
             musicPlayer = new MusicPlayer(this);
-            volumeSlider.Volume = (float)0.25;
+            volumeSlider.Volume = (float)0.254;
         }
 
         //overriding this method to prevent "ding" sound when pressing enter on a one line textbox
@@ -276,46 +276,18 @@ namespace SoundWiz
         private void btnPlay_Click(object sender, EventArgs e)
         {
 
-            if (!musicPlayer.isPlaying)
+            if (musicPlayer.play())
             {
-                /*
-                ISampleProvider wavFileToSkype = null;
-                ISampleProvider wavFileToMe = null;
-                List<ISampleProvider> volumeMeters = CreateInputStream(fileName);
-                wavFileToSkype = volumeMeters[0];
-                wavFileToMe = volumeMeters[1];
-
-                trackFileLocation.Maximum = (int)fileWaveStreamDAC.TotalTime.TotalSeconds;
-                lblTotalTime.Text = String.Format("{0:00}:{1:00}", (int)fileWaveStreamDAC.TotalTime.TotalMinutes, fileWaveStreamDAC.TotalTime.Seconds);
+                trackFileLocation.Maximum = (int)musicPlayer.getTotalSongSeconds();
+                lblTotalTime.Text = String.Format("{0:00}:{1:00}", (int)musicPlayer.getWaveStream("dac").TotalTime.TotalMinutes, musicPlayer.getWaveStream("dac").TotalTime.Seconds);
                 trackFileLocation.TickFrequency = trackFileLocation.Maximum / 30;
+                btnPause.Enabled = true;
+                btnPause.Visible = true;
+                btnPlay.Enabled = false;
+                btnPlay.Visible = false;
 
 
-                //play out to me
-                waveOutToMe = new NAudio.Wave.WaveOut();
-                waveOutToMe.DeviceNumber = 0; //default output device
-                waveOutToMe.DesiredLatency = 150;
-                waveOutToMe.Init(new SampleToWaveProvider(wavFileToMe));
-                waveOutToMe.Play();
 
-                //play out to skype
-                waveOutToSkype = new NAudio.Wave.WaveOut();
-                waveOutToSkype.DeviceNumber = 3; //digital audio cable
-                waveOutToSkype.DesiredLatency = 150;
-
-                waveOutToSkype.Init(new SampleToWaveProvider(wavFileToSkype));
-                waveOutToSkype.Play();
-                */
-                
-                musicPlayer.play();
-                if (musicPlayer.isPlaying)
-                {
-                    trackFileLocation.Maximum = (int)musicPlayer.getTotalSongTime();
-                    lblTotalTime.Text = String.Format("{0:00}:{1:00}", (int)musicPlayer.getWaveStream("dac").TotalTime.TotalMinutes, musicPlayer.getWaveStream("dac").TotalTime.Seconds);
-                    trackFileLocation.TickFrequency = trackFileLocation.Maximum / 30;
-                    btnPause.Visible = true;
-                    btnPlay.Visible = false;
-                   
-                }
             }
 
         }
@@ -332,6 +304,9 @@ namespace SoundWiz
                 fileName = openFileDialog.FileName;
                 lblSoundFile.Text = fileName;
                 musicPlayer.loadSong(fileName);
+                trackFileLocation.Maximum = (int)musicPlayer.getTotalSongSeconds();
+                lblTotalTime.Text = String.Format("{0:00}:{1:00}", (int)musicPlayer.getTotalSongMinutes(), musicPlayer.getTotalSongSeconds());
+                trackFileLocation.TickFrequency = trackFileLocation.Maximum / 30;
             }
         }
 
@@ -479,8 +454,12 @@ namespace SoundWiz
         private void btnPause_Click(object sender, EventArgs e)
         {
             musicPlayer.pause();
+            System.Threading.Thread.Sleep(150);
             btnPlay.Visible = true;
+            btnPlay.Enabled = true;
+            btnPause.Enabled = false;
             btnPause.Visible = false;
+
         }
 
 

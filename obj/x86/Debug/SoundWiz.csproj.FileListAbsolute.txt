@@ -20,3 +20,5 @@ C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\SoundWiz.pdb
 C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.pdb
 C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\NAudio.xml
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.csprojResolveAssemblyReference.cache

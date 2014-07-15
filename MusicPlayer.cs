@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-
+using NAudio.Wave.WaveFormats;
 namespace SoundWiz
 {
     public class MusicPlayer
@@ -18,7 +18,7 @@ namespace SoundWiz
         private Queue playerQueue;
         private WaveStream fileWaveStreamDAC;
         private WaveStream fileWaveStreamDefault;
-        private WaveOut waveOutToMe, waveOutToSkype;
+        private IWavePlayer waveOutToMe, waveOutToSkype; //IwaveOutPlayer!!!
         private Form1 _form;
         public bool isPlaying = false;
         public MusicPlayer(Form1 _form)
@@ -42,8 +42,7 @@ namespace SoundWiz
 
             if (waveOutToMe != null && waveOutToSkype != null)
             {
-                PlaybackState state = waveOutToMe.PlaybackState;
-                if (state == PlaybackState.Paused || state == PlaybackState.Stopped)
+                if (waveOutToMe.PlaybackState == PlaybackState.Paused || waveOutToMe.PlaybackState == PlaybackState.Stopped)
                 {
                     waveOutToMe.Play();
                     waveOutToSkype.Play();
@@ -64,32 +63,49 @@ namespace SoundWiz
             currentSong = filename;
             ISampleProvider wavFileToSkype = null;
             ISampleProvider wavFileToMe = null;
-            List<ISampleProvider> volumeMeters = CreateInputStream(currentSong);
+            
+            
             try
             {
+
+               List<ISampleProvider> volumeMeters = CreateInputStream(currentSong);
+
                 wavFileToSkype = volumeMeters[0];
                 wavFileToMe = volumeMeters[1];
 
-                /*
-                trackFileLocation.Maximum = (int)fileWaveStreamDAC.TotalTime.TotalSeconds;
-                lblTotalTime.Text = String.Format("{0:00}:{1:00}", (int)fileWaveStreamDAC.TotalTime.TotalMinutes, fileWaveStreamDAC.TotalTime.Seconds);
-                trackFileLocation.TickFrequency = trackFileLocation.Maximum / 30;
-                */
+               var waveOut = new WaveOutEvent();
+               waveOut.DeviceNumber = 0;
+               waveOut.DesiredLatency = 150;
+               waveOutToMe = waveOut;
 
+                
+                
+                
+               
                 //play out to me
-                waveOutToMe = new NAudio.Wave.WaveOut();
-                waveOutToMe.DeviceNumber = 0; //default output device
-                waveOutToMe.DesiredLatency = 150;
+               // WaveOut device = new NAudio.Wave.WaveOut();
+                //waveOutToMe = new NAudio.Wave.IWavePlayer();
+                //device.DeviceNumber = 0; //default output device
+                //device.DesiredLatency = 150;
+
+
+
                 waveOutToMe.Init(new SampleToWaveProvider(wavFileToMe));
                 //waveOutToMe.Play();
 
                 //play out to skype
-                waveOutToSkype = new NAudio.Wave.WaveOut();
-                waveOutToSkype.DeviceNumber = 3; //digital audio cable
-                waveOutToSkype.DesiredLatency = 150;
+
+                var waveOut2 = new WaveOutEvent();
+                waveOut2.DeviceNumber = 0;
+                waveOut2.DesiredLatency = 150;
+                waveOutToSkype = waveOut2;
+
+               // waveOutToSkype = new NAudio.Wave.WaveOut();
+             //   waveOutToSkype.DeviceNumber = 3; //digital audio cable
+             //   waveOutToSkype.DesiredLatency = 150;
                 waveOutToSkype.Init(new SampleToWaveProvider(wavFileToSkype));
                 //waveOutToSkype.Play();
-                //isPlaying = true;
+                isPlaying = true;
                 return true;
             }
             catch (NullReferenceException)
@@ -109,11 +125,13 @@ namespace SoundWiz
 
         public void pause()
         {
-            if (waveOutToMe.PlaybackState == PlaybackState.Playing)
+            if (waveOutToMe != null)
             {
-                waveOutToMe.Pause();
-                waveOutToSkype.Pause();
-                isPlaying = false;
+                if (waveOutToMe.PlaybackState == PlaybackState.Playing)
+                {
+                    waveOutToMe.Pause();
+                    waveOutToSkype.Pause();
+                }
             }
         }
 
@@ -134,22 +152,28 @@ namespace SoundWiz
 
         public TimeSpan getCurrentSongTime()
         {
-            return fileWaveStreamDAC.CurrentTime;
+
+            return fileWaveStreamDefault.CurrentTime;
         }
 
-        public double getTotalSongTime()
+        public double getTotalSongSeconds()
         {
-            return fileWaveStreamDAC.TotalTime.TotalSeconds;
+            return fileWaveStreamDefault.TotalTime.TotalSeconds;
+        }
+
+        public double getTotalSongMinutes()
+        {
+            return fileWaveStreamDefault.TotalTime.TotalMinutes;
         }
 
         public long getCurrentSongPosition()
         {
-            return fileWaveStreamDAC.Position;
+            return fileWaveStreamDefault.Position;
         }
 
         public long getCurrentSongLength()
         {
-            return fileWaveStreamDAC.Length;
+            return fileWaveStreamDefault.Length;
         }
 
         public PlaybackState getPlaybackState()
@@ -202,6 +226,7 @@ namespace SoundWiz
                 this.fileWaveStreamDefault = CreateWaveStream(fileName);
                 var waveChannelDefault = new SampleChannel(this.fileWaveStreamDefault);
                 _form.setVolumeDelegateDefault = (vol) => waveChannelDefault.Volume = vol;
+                waveChannelDefault.Volume = (float)0.254;
                 //waveChannel2.PreVolumeMeter += OnPreVolumeMeter;
                 var postVolumeMeterDefault = new MeteringSampleProvider(waveChannelDefault);
                 postVolumeMeterDefault.StreamVolume += _form.OnPostVolumeMeter;

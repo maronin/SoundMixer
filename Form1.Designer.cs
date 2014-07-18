@@ -29,23 +29,23 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.cbInputDevices = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.volumeSlider = new NAudio.Gui.VolumeSlider();
             this.waveformPainter1 = new NAudio.Gui.WaveformPainter();
             this.volumeMeter1 = new NAudio.Gui.VolumeMeter();
             this.lblSoundFile = new System.Windows.Forms.Label();
-            this.button5 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnPause = new System.Windows.Forms.PictureBox();
             this.btnPrevious = new System.Windows.Forms.PictureBox();
             this.btnPlay = new System.Windows.Forms.PictureBox();
             this.btnStop = new System.Windows.Forms.PictureBox();
             this.btnNext = new System.Windows.Forms.PictureBox();
-            this.btnPause = new System.Windows.Forms.PictureBox();
-            this.trackFileLocation = new System.Windows.Forms.TrackBar();
+            this.trackBarVolumeDAC = new System.Windows.Forms.TrackBar();
             this.trackBarVolume = new System.Windows.Forms.TrackBar();
+            this.trackFileLocation = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
-            this.listYoutubeMP3s = new System.Windows.Forms.ListBox();
             this.tbYoutubeAddURL = new System.Windows.Forms.TextBox();
             this.lblErrorMessageYoutubeLInk = new System.Windows.Forms.Label();
             this.lblTotalTime = new System.Windows.Forms.Label();
@@ -54,14 +54,23 @@
             this.picYouTubePicture = new System.Windows.Forms.PictureBox();
             this.btnOpenFile = new System.Windows.Forms.PictureBox();
             this.playerTimer = new System.Windows.Forms.Timer(this.components);
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.playList = new System.Windows.Forms.ListView();
+            this.songNumberCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.songNameCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.songDurationCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.progressBarYoutube = new System.Windows.Forms.ProgressBar();
+            this.lblLoading = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnPause)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnPrevious)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnPlay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnStop)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnNext)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnPause)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackFileLocation)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarVolumeDAC)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarVolume)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackFileLocation)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.loadingIcon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picYouTubePicture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnOpenFile)).BeginInit();
@@ -71,7 +80,7 @@
             // 
             this.cbInputDevices.BackColor = System.Drawing.Color.GreenYellow;
             this.cbInputDevices.FormattingEnabled = true;
-            this.cbInputDevices.Location = new System.Drawing.Point(32, 562);
+            this.cbInputDevices.Location = new System.Drawing.Point(32, 583);
             this.cbInputDevices.Name = "cbInputDevices";
             this.cbInputDevices.Size = new System.Drawing.Size(170, 21);
             this.cbInputDevices.TabIndex = 1;
@@ -91,10 +100,12 @@
             this.volumeSlider.BackColor = System.Drawing.Color.White;
             this.volumeSlider.Cursor = System.Windows.Forms.Cursors.NoMoveHoriz;
             this.volumeSlider.ForeColor = System.Drawing.Color.White;
-            this.volumeSlider.Location = new System.Drawing.Point(18, 16);
+            this.volumeSlider.Location = new System.Drawing.Point(386, 571);
             this.volumeSlider.Name = "volumeSlider";
             this.volumeSlider.Size = new System.Drawing.Size(125, 23);
             this.volumeSlider.TabIndex = 10;
+            this.volumeSlider.Visible = false;
+            this.volumeSlider.Volume = 0F;
             this.volumeSlider.VolumeChanged += new System.EventHandler(this.volumeSlider_VolumeChanged);
             // 
             // waveformPainter1
@@ -126,20 +137,8 @@
             this.lblSoundFile.ForeColor = System.Drawing.Color.White;
             this.lblSoundFile.Location = new System.Drawing.Point(487, 609);
             this.lblSoundFile.Name = "lblSoundFile";
-            this.lblSoundFile.Size = new System.Drawing.Size(47, 13);
+            this.lblSoundFile.Size = new System.Drawing.Size(0, 13);
             this.lblSoundFile.TabIndex = 7;
-            this.lblSoundFile.Text = "open file";
-            // 
-            // button5
-            // 
-            this.button5.BackColor = System.Drawing.Color.White;
-            this.button5.Location = new System.Drawing.Point(938, 527);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(129, 23);
-            this.button5.TabIndex = 4;
-            this.button5.Text = "Play Sound";
-            this.button5.UseVisualStyleBackColor = false;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // panel1
             // 
@@ -148,20 +147,35 @@
             this.panel1.Controls.Add(this.waveformPainter1);
             this.panel1.Controls.Add(this.btnPrevious);
             this.panel1.Controls.Add(this.btnPlay);
-            this.panel1.Controls.Add(this.volumeSlider);
             this.panel1.Controls.Add(this.btnStop);
             this.panel1.Controls.Add(this.btnNext);
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Location = new System.Drawing.Point(32, 493);
+            this.panel1.Controls.Add(this.trackBarVolumeDAC);
+            this.panel1.Controls.Add(this.trackBarVolume);
+            this.panel1.Location = new System.Drawing.Point(32, 490);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(761, 56);
+            this.panel1.Size = new System.Drawing.Size(761, 73);
             this.panel1.TabIndex = 13;
+            // 
+            // btnPause
+            // 
+            this.btnPause.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnPause.BackgroundImage")));
+            this.btnPause.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnPause.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnPause.Location = new System.Drawing.Point(320, 4);
+            this.btnPause.Name = "btnPause";
+            this.btnPause.Size = new System.Drawing.Size(38, 56);
+            this.btnPause.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnPause.TabIndex = 0;
+            this.btnPause.TabStop = false;
+            this.btnPause.Visible = false;
+            this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
             // 
             // btnPrevious
             // 
             this.btnPrevious.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnPrevious.Image = global::SoundWiz.Properties.Resources.previous;
-            this.btnPrevious.Location = new System.Drawing.Point(197, 3);
+            this.btnPrevious.Image = ((System.Drawing.Image)(resources.GetObject("btnPrevious.Image")));
+            this.btnPrevious.Location = new System.Drawing.Point(197, 8);
             this.btnPrevious.Name = "btnPrevious";
             this.btnPrevious.Size = new System.Drawing.Size(54, 46);
             this.btnPrevious.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -171,10 +185,10 @@
             // 
             // btnPlay
             // 
-            this.btnPlay.BackgroundImage = global::SoundWiz.Properties.Resources.Play;
+            this.btnPlay.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnPlay.BackgroundImage")));
             this.btnPlay.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.btnPlay.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnPlay.Location = new System.Drawing.Point(311, 3);
+            this.btnPlay.Location = new System.Drawing.Point(311, 8);
             this.btnPlay.Name = "btnPlay";
             this.btnPlay.Size = new System.Drawing.Size(58, 46);
             this.btnPlay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -184,9 +198,9 @@
             // 
             // btnStop
             // 
-            this.btnStop.BackgroundImage = global::SoundWiz.Properties.Resources.Stop;
+            this.btnStop.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnStop.BackgroundImage")));
             this.btnStop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnStop.Location = new System.Drawing.Point(267, -2);
+            this.btnStop.Location = new System.Drawing.Point(267, 3);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(38, 56);
             this.btnStop.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -196,27 +210,35 @@
             // btnNext
             // 
             this.btnNext.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnNext.Image = global::SoundWiz.Properties.Resources.Next;
-            this.btnNext.Location = new System.Drawing.Point(375, 3);
+            this.btnNext.Image = ((System.Drawing.Image)(resources.GetObject("btnNext.Image")));
+            this.btnNext.Location = new System.Drawing.Point(375, 8);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(54, 46);
             this.btnNext.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnNext.TabIndex = 0;
             this.btnNext.TabStop = false;
             // 
-            // btnPause
+            // trackBarVolumeDAC
             // 
-            this.btnPause.BackgroundImage = global::SoundWiz.Properties.Resources.Pause;
-            this.btnPause.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnPause.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnPause.Location = new System.Drawing.Point(322, -2);
-            this.btnPause.Name = "btnPause";
-            this.btnPause.Size = new System.Drawing.Size(38, 56);
-            this.btnPause.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.btnPause.TabIndex = 0;
-            this.btnPause.TabStop = false;
-            this.btnPause.Visible = false;
-            this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
+            this.trackBarVolumeDAC.Location = new System.Drawing.Point(7, 35);
+            this.trackBarVolumeDAC.Maximum = 100;
+            this.trackBarVolumeDAC.Name = "trackBarVolumeDAC";
+            this.trackBarVolumeDAC.Size = new System.Drawing.Size(174, 45);
+            this.trackBarVolumeDAC.TabIndex = 14;
+            this.trackBarVolumeDAC.TickFrequency = 5;
+            this.trackBarVolumeDAC.Value = 25;
+            this.trackBarVolumeDAC.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            // 
+            // trackBarVolume
+            // 
+            this.trackBarVolume.Location = new System.Drawing.Point(7, 4);
+            this.trackBarVolume.Maximum = 100;
+            this.trackBarVolume.Name = "trackBarVolume";
+            this.trackBarVolume.Size = new System.Drawing.Size(174, 45);
+            this.trackBarVolume.TabIndex = 14;
+            this.trackBarVolume.TickFrequency = 5;
+            this.trackBarVolume.Value = 25;
+            this.trackBarVolume.Scroll += new System.EventHandler(this.trackBarVolume_Scroll);
             // 
             // trackFileLocation
             // 
@@ -228,19 +250,6 @@
             this.trackFileLocation.TickFrequency = 1000;
             this.trackFileLocation.Scroll += new System.EventHandler(this.trackFileLocation_Scroll);
             // 
-            // trackBarVolume
-            // 
-            this.trackBarVolume.Location = new System.Drawing.Point(241, 555);
-            this.trackBarVolume.Maximum = 100;
-            this.trackBarVolume.Minimum = 5;
-            this.trackBarVolume.Name = "trackBarVolume";
-            this.trackBarVolume.Size = new System.Drawing.Size(139, 45);
-            this.trackBarVolume.TabIndex = 14;
-            this.trackBarVolume.TickFrequency = 5;
-            this.trackBarVolume.Value = 5;
-            this.trackBarVolume.Visible = false;
-            this.trackBarVolume.Scroll += new System.EventHandler(this.trackBarVolume_Scroll);
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -250,14 +259,6 @@
             this.label2.Size = new System.Drawing.Size(78, 13);
             this.label2.TabIndex = 16;
             this.label2.Text = "Youtube URL: ";
-            // 
-            // listYoutubeMP3s
-            // 
-            this.listYoutubeMP3s.FormattingEnabled = true;
-            this.listYoutubeMP3s.Location = new System.Drawing.Point(833, 64);
-            this.listYoutubeMP3s.Name = "listYoutubeMP3s";
-            this.listYoutubeMP3s.Size = new System.Drawing.Size(234, 420);
-            this.listYoutubeMP3s.TabIndex = 17;
             // 
             // tbYoutubeAddURL
             // 
@@ -323,7 +324,7 @@
             this.btnOpenFile.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnOpenFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnOpenFile.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnOpenFile.Image = global::SoundWiz.Properties.Resources.Open;
+            this.btnOpenFile.Image = ((System.Drawing.Image)(resources.GetObject("btnOpenFile.Image")));
             this.btnOpenFile.Location = new System.Drawing.Point(804, 33);
             this.btnOpenFile.Name = "btnOpenFile";
             this.btnOpenFile.Size = new System.Drawing.Size(19, 18);
@@ -334,8 +335,74 @@
             // playerTimer
             // 
             this.playerTimer.Enabled = true;
-            this.playerTimer.Interval = 500;
+            this.playerTimer.Interval = 250;
             this.playerTimer.Tick += new System.EventHandler(this.playerTimer_Tick);
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(823, 593);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(100, 20);
+            this.textBox2.TabIndex = 23;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.Color.White;
+            this.label3.Location = new System.Drawing.Point(823, 536);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(29, 13);
+            this.label3.TabIndex = 24;
+            this.label3.Text = "hello";
+            // 
+            // playList
+            // 
+            this.playList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.songNumberCol,
+            this.songNameCol,
+            this.songDurationCol});
+            this.playList.FullRowSelect = true;
+            this.playList.Location = new System.Drawing.Point(833, 59);
+            this.playList.Margin = new System.Windows.Forms.Padding(5);
+            this.playList.Name = "playList";
+            this.playList.Size = new System.Drawing.Size(234, 362);
+            this.playList.TabIndex = 25;
+            this.playList.UseCompatibleStateImageBehavior = false;
+            this.playList.View = System.Windows.Forms.View.Details;
+            // 
+            // songNumberCol
+            // 
+            this.songNumberCol.Text = "#";
+            this.songNumberCol.Width = 25;
+            // 
+            // songNameCol
+            // 
+            this.songNameCol.Text = "Name";
+            this.songNameCol.Width = 143;
+            // 
+            // songDurationCol
+            // 
+            this.songDurationCol.Text = "Duration";
+            // 
+            // progressBarYoutube
+            // 
+            this.progressBarYoutube.Location = new System.Drawing.Point(358, 198);
+            this.progressBarYoutube.Name = "progressBarYoutube";
+            this.progressBarYoutube.Size = new System.Drawing.Size(100, 23);
+            this.progressBarYoutube.TabIndex = 26;
+            this.progressBarYoutube.Visible = false;
+            // 
+            // lblLoading
+            // 
+            this.lblLoading.AutoSize = true;
+            this.lblLoading.BackColor = System.Drawing.Color.Transparent;
+            this.lblLoading.ForeColor = System.Drawing.Color.White;
+            this.lblLoading.Location = new System.Drawing.Point(380, 224);
+            this.lblLoading.Name = "lblLoading";
+            this.lblLoading.Size = new System.Drawing.Size(54, 13);
+            this.lblLoading.TabIndex = 27;
+            this.lblLoading.Text = "Loading...";
+            this.lblLoading.Visible = false;
             // 
             // Form1
             // 
@@ -343,33 +410,37 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1079, 631);
+            this.Controls.Add(this.lblLoading);
+            this.Controls.Add(this.progressBarYoutube);
+            this.Controls.Add(this.playList);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.textBox2);
             this.Controls.Add(this.loadingIcon);
             this.Controls.Add(this.lblErrorMessageYoutubeLInk);
+            this.Controls.Add(this.volumeSlider);
             this.Controls.Add(this.lblTotalTime);
             this.Controls.Add(this.lblCurrentTime);
             this.Controls.Add(this.picYouTubePicture);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.listYoutubeMP3s);
             this.Controls.Add(this.tbYoutubeAddURL);
-            this.Controls.Add(this.trackBarVolume);
             this.Controls.Add(this.trackFileLocation);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.cbInputDevices);
             this.Controls.Add(this.volumeMeter1);
             this.Controls.Add(this.lblSoundFile);
             this.Controls.Add(this.btnOpenFile);
-            this.Controls.Add(this.button5);
             this.Name = "Form1";
             this.Text = "Audio Loopback";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnPause)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnPrevious)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnPlay)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnStop)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnNext)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnPause)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackFileLocation)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarVolumeDAC)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarVolume)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackFileLocation)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.loadingIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picYouTubePicture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnOpenFile)).EndInit();
@@ -378,9 +449,10 @@
 
         }
 
+
+
         #endregion
 
-        private System.Windows.Forms.Button button5;
         private System.Windows.Forms.PictureBox btnOpenFile;
         private System.Windows.Forms.Label lblSoundFile;
         private NAudio.Gui.VolumeMeter volumeMeter1;
@@ -395,7 +467,6 @@
         private System.Windows.Forms.TrackBar trackFileLocation;
         private System.Windows.Forms.TrackBar trackBarVolume;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ListBox listYoutubeMP3s;
         private System.Windows.Forms.TextBox tbYoutubeAddURL;
         private System.Windows.Forms.Label lblErrorMessageYoutubeLInk;
         private System.Windows.Forms.PictureBox loadingIcon;
@@ -405,6 +476,15 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer playerTimer;
         private System.Windows.Forms.PictureBox btnPause;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ListView playList;
+        private System.Windows.Forms.ColumnHeader songNameCol;
+        private System.Windows.Forms.ColumnHeader songDurationCol;
+        private System.Windows.Forms.ColumnHeader songNumberCol;
+        private System.Windows.Forms.TrackBar trackBarVolumeDAC;
+        private System.Windows.Forms.ProgressBar progressBarYoutube;
+        private System.Windows.Forms.Label lblLoading;
     }
 }
 

@@ -16,7 +16,11 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-
+using System.Threading;
+using Microsoft.WindowsAPICodePack.Shell;
+using NAudio.CoreAudioApi;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 namespace SoundWiz
 {
 
@@ -24,30 +28,31 @@ namespace SoundWiz
     public partial class Form1 : Form
     {
         public static readonly Regex YoutubeVideoRegex = new Regex(@"youtu(?:\.be|be\.com)/(?:.*v(?:/|=)|(?:.*/)?)([a-zA-Z0-9-_]+)", RegexOptions.IgnoreCase);
-        private string fileName = null;
-        private WaveStream fileWaveStreamDAC;
-        private WaveStream fileWaveStreamDefault;
+        private string filePath = null;
         public Action<float> setVolumeDelegateDAC;
         public Action<float> setVolumeDelegateDefault;
         private List<FileFormats> InputFileFormats;
-        private WaveOut waveOutToMe, waveOutToSkype;
-        private bool filePlaying = false;
+        private int songNumber = 1;
         WebClient webClient;
         WebBrowser browser;
-        NAudio.Wave.WaveIn sourceStream = null;
-        NAudio.Wave.WaveOut waveOut = null;
+        IWaveIn sourceStream = null;
+        WaveOut waveOut = null;
         MusicPlayer musicPlayer;
+        YouTubeDownloader youTubeDownloader;
+        double testingNumber = 20.034;
         public Form1()
         {
             InitializeComponent();
-
+            Application.ApplicationExit += Application_ApplicationExit;
             //initialize supported file formats
             InputFileFormats = new List<FileFormats>();
             InputFileFormats.Add(new FileFormats("MP3", ".mp3"));
             InputFileFormats.Add(new FileFormats("WAV", ".wav"));
             InputFileFormats.Add(new FileFormats("AIFF", ".aiff"));
-
-
+            //backgroundWorkerOpenFile.WorkerReportsProgress = true;
+            //backgroundWorkerOpenFile.WorkerSupportsCancellation = true;
+            LoadWasapiDevicesCombo();
+            label3.Text = testingNumber.ToString();
 
             //populate the combobox with current input devices (mic, digital cable, etc.)
             List<NAudio.Wave.WaveInCapabilities> sources = new List<NAudio.Wave.WaveInCapabilities>();
@@ -56,12 +61,14 @@ namespace SoundWiz
                 sources.Add(NAudio.Wave.WaveIn.GetCapabilities(i));
 
             }
-
+            /*
             foreach (var source in sources)
             {
                 cbInputDevices.Items.Add(source.ProductName);
-            }
+            } */
+
             cbInputDevices.SelectedIndexChanged += cbInputDevices_SelectedIndexChanged;
+
 
             //initialize browser youtube stuff here.
             webClient = new WebClient();
@@ -72,9 +79,20 @@ namespace SoundWiz
             tbYoutubeAddURL.KeyUp += tbYoutubeAddURL_KeyUp;
             loadingIcon.Image = Image.FromFile(@"C:\Users\Mark\Documents\Visual Studio 2013\Projects\YouTube to MP3\images\loading.gif");
 
-
             musicPlayer = new MusicPlayer(this);
-            volumeSlider.Volume = (float)0.254;
+            youTubeDownloader = new YouTubeDownloader(this, musicPlayer);
+
+            //volumeSlider.Volume = (float)0.254;
+
+            playList.MouseDoubleClick += playList_SongSelected;
+
+        }
+
+        void Application_ApplicationExit(object sender, EventArgs e)
+        {
+            musicPlayer.exit();
+            Environment.Exit(0);
+
         }
 
         //overriding this method to prevent "ding" sound when pressing enter on a one line textbox
@@ -87,100 +105,20 @@ namespace SoundWiz
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
+        public void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            label2.Text = "Completed";
+        }
+
         private void tbYoutubeAddURL_KeyUp(object sender, KeyEventArgs e)
         {
 
             if (e.KeyCode == Keys.Enter)
             {
-
-                //set the youtube url to convert on the form
-                browser.Document.GetElementById("youtube-url").SetAttribute("Value", tbYoutubeAddURL.Text);
-                string link = null;
-
-                do
-                {
-                    //click convert
-                    browser.Document.GetElementById("submit").InvokeMember("Click");
-
-                    loadingIcon.Visible = true;
-                    lblErrorMessageYoutubeLInk.Text = "";
-                    waitTillLoad();
-                    //waitTillLoad();
-
-
-                    //check to see if there are any error from converting
-                    HtmlElement error = browser.Document.GetElementById("error_text");
-                    if (error.Style == "DISPLAY: block")
-                    {
-                        lblErrorMessageYoutubeLInk.Text = error.InnerText;
-                        //textBox2.Text = ""; replace with whats going to be reading the stream for mp3
-                        loadingIcon.Visible = false;
-                        break;
-                    }
-
-                    HtmlElement status = browser.Document.GetElementById("status_text");
-
-                    if (status.InnerText.Contains("Video successfully converted to mp3"))
-                    {
-                        link = browser.Document.GetElementById("dl_link").InnerHtml;
-
-                    }
-
-                    /* old way of doing it, might work if the processing takes too long?
-                    while(true){
-                        HtmlElement status = browser.Document.GetElementById("status_text");
-                        if (status.InnerText.Contains("Video successfully converted to mp3"))
-                        {
-                            link = browser.Document.GetElementById("dl_link").InnerHtml;
-                            break;
-
-                        }
-
-                    }*/
-
-
-
-                } while (link == null);
-
-
-                if (link != null)
-                {
-
-                    //extract the youtube mp3 download link
-                    string downloadUrl = ExtractFromString(link, "get?ab=", "\"");
-                    //remove the last character " not sure how to make this better
-                    downloadUrl = downloadUrl.Remove(downloadUrl.Length - 1);
-
-                    //textBox2.Text = "http://www.youtube-mp3.org/" + downloadUrl; replace with whats going to be reading the stream for mp3
-
-                    lblErrorMessageYoutubeLInk.Text = "";
-
-                    Match youtubeMatch = YoutubeVideoRegex.Match(tbYoutubeAddURL.Text);
-                    string youtubeID = string.Empty;
-
-                    if (youtubeMatch.Success)
-                        youtubeID = youtubeMatch.Groups[1].Value;
-
-                    string y = webClient.DownloadString("http://gdata.youtube.com/feeds/api/videos/" + youtubeID + "?v=2&alt=json&prettyprint=true");
-
-                    //string y = webClient.DownloadString("http://gdata.youtube.com/feeds/api/videos/" + youtubeID + "?v=2&alt=json");
-                    JObject JObj = (JObject)JsonConvert.DeserializeObject(y);
-
-                    YouTubeDataFeed youTubeDataFeed = JsonConvert.DeserializeObject<YouTubeDataFeed>(y);
-
-                    //var entry = JObj["feed"]["entry"];
-                    //var imgURL = entry["media$group"];
-                    loadingIcon.Visible = false;
-                    picYouTubePicture.ImageLocation = youTubeDataFeed.entry.mediagroup.mediathumbnail[3].url.ToString();
-                    listYoutubeMP3s.Items.Add(tbYoutubeAddURL.Text);
-                    tbYoutubeAddURL.Text = "";
-                }
-                else
-                {
-                    lblErrorMessageYoutubeLInk.ForeColor = Color.Red;
-
-                }
-
+                progressBarYoutube.Value = 0;
+                //progressBarYoutube.Visible = true;
+                loadingIcon.Visible = true;
+                youTubeDownloader.downloadMP3(tbYoutubeAddURL.Text);
 
             }
 
@@ -215,7 +153,38 @@ namespace SoundWiz
 
         }
 
-        void cbInputDevices_SelectedIndexChanged(object sender, EventArgs e)
+        private void LoadWasapiDevicesCombo()
+        {
+            MMDeviceEnumerator deviceEnum = new MMDeviceEnumerator();
+            MMDeviceCollection deviceCol = deviceEnum.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active);
+
+            Collection<MMDevice> devices = new Collection<MMDevice>();
+
+            foreach (MMDevice device in deviceCol)
+            {
+                devices.Add(device);
+            }
+
+            foreach (var item in devices)
+            {
+                cbInputDevices.Items.Add(item);
+            }
+
+        }
+
+        public void cbInputDevices_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //attachInputMicrophone();
+            Thread t = new Thread(attachInputMicrophone);
+            t.Start();
+        }
+
+        public void wClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            progressBarYoutube.Value = e.ProgressPercentage;
+        }
+
+        public void attachInputMicrophone()
         {
             if (waveOut != null)
             {
@@ -229,20 +198,45 @@ namespace SoundWiz
                 sourceStream.Dispose();
                 sourceStream = null;
             }
-            if (waveOutToSkype != null)
-                waveOutToSkype.Stop();
-            if (waveOutToMe != null)
-                waveOutToMe.Stop();
 
             System.Threading.Thread.Sleep(300);//to prevent looping of sound when switching to the virtual audio cable
+            
+            int deviceNumber = -1;
 
-            int deviceNumber = cbInputDevices.SelectedIndex;
+            if (cbInputDevices.InvokeRequired)
+            {
+                Action action = () => deviceNumber = cbInputDevices.SelectedIndex;
+                cbInputDevices.Invoke(action);
+            }
+            else
+            {
+                deviceNumber = cbInputDevices.SelectedIndex;
+            }
+
+           // int deviceNumber = cbInputDevices.SelectedIndex;
 
             //get the selected input device
-            sourceStream = new NAudio.Wave.WaveIn();
-            sourceStream.DeviceNumber = deviceNumber;
-            sourceStream.WaveFormat = new NAudio.Wave.WaveFormat(44100, NAudio.Wave.WaveIn.GetCapabilities(deviceNumber).Channels);
-
+            // sourceStream = new WaveIn();
+            //sourceStream.DeviceNumber = deviceNumber;
+            //sourceStream.WaveFormat = new NAudior.Wave.WaveFormat(96000, NAudio.Wave.WaveIn.GetCapabilities(deviceNumber).Channels);
+            //sourceStream.WaveFormat = new WaveFormat(16000, 1);
+            if (deviceNumber == -1)
+            {
+                sourceStream = new WasapiCapture((MMDevice)cbInputDevices.Items[0]);
+            }
+            else
+            {
+                if (cbInputDevices.InvokeRequired)
+                {
+                    Action action = () => sourceStream = new WasapiCapture((MMDevice)cbInputDevices.SelectedItem);
+                    cbInputDevices.Invoke(action);
+                }
+                else
+                {
+                    sourceStream = new WasapiCapture((MMDevice)cbInputDevices.SelectedItem);
+                }
+                
+            }
             //set the input waveIn to the input device selected
             NAudio.Wave.WaveInProvider waveIn = new NAudio.Wave.WaveInProvider(sourceStream);
 
@@ -253,15 +247,11 @@ namespace SoundWiz
             waveOut.DeviceNumber = 3;//digital audio cable
             waveOut.DesiredLatency = 150;
             waveOut.Init(waveIn);
+            
 
-            sourceStream.StartRecording();
             waveOut.Play();
+            sourceStream.StartRecording();
 
-        }
-
-        //play button
-        private void button5_Click(object sender, EventArgs e)
-        {
 
 
 
@@ -278,15 +268,16 @@ namespace SoundWiz
 
             if (musicPlayer.play())
             {
-                trackFileLocation.Maximum = (int)musicPlayer.getTotalSongSeconds();
+                trackFileLocation.Maximum = (int)musicPlayer.getTotalSongMiliseconds() * 10;
                 lblTotalTime.Text = String.Format("{0:00}:{1:00}", (int)musicPlayer.getWaveStream("dac").TotalTime.TotalMinutes, musicPlayer.getWaveStream("dac").TotalTime.Seconds);
                 trackFileLocation.TickFrequency = trackFileLocation.Maximum / 30;
-                btnPause.Enabled = true;
-                btnPause.Visible = true;
-                btnPlay.Enabled = false;
-                btnPlay.Visible = false;
+                activatePauseButton();
+                setDefaultVolume((float)trackBarVolume.Value / 100, (float)trackBarVolumeDAC.Value / 100);
 
 
+            }
+            else
+            {
 
             }
 
@@ -299,14 +290,101 @@ namespace SoundWiz
             //string allExtensions = string.Join(";", (from f in InputFileFormats select "*" + f.Extension).ToArray());
             openFileDialog.Filter = String.Format("All Supported Files|{0}|All Files (*.*)|*.*", allExtensions);
             openFileDialog.FilterIndex = 1;
+
+
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                fileName = openFileDialog.FileName;
-                lblSoundFile.Text = fileName;
-                musicPlayer.loadSong(fileName);
-                trackFileLocation.Maximum = (int)musicPlayer.getTotalSongSeconds();
-                lblTotalTime.Text = String.Format("{0:00}:{1:00}", (int)musicPlayer.getTotalSongMinutes(), musicPlayer.getTotalSongSeconds());
-                trackFileLocation.TickFrequency = trackFileLocation.Maximum / 30;
+                // Filename to process was passed to RunWorkerAsync(), so it's available
+                // here in DoWorkEventArgs object.
+                filePath = openFileDialog.FileName;
+                lblSoundFile.Text = filePath;
+
+                ShellFile so = ShellFile.FromFilePath(filePath);
+                double nanoseconds;
+                double.TryParse(so.Properties.System.Media.Duration.Value.ToString(),
+                out nanoseconds);
+                Console.WriteLine("NanaoSeconds: {0}", nanoseconds);
+                //if (nanoseconds > 0)
+                //{
+                double seconds = Convert100NanosecondsToMilliseconds(nanoseconds) / 1000;
+                TimeSpan t = TimeSpan.FromSeconds(seconds);
+
+                string duration = t.ToString(@"mm\:ss");
+                string fileName = Path.GetFileNameWithoutExtension(filePath);
+                //}
+
+                Song songToAdd = new Song(fileName, null, duration, filePath, true, songNumber);
+
+                //musicPlayer.loadSong(fileName);
+                musicPlayer.addSong(songToAdd);
+                addSongToPlayList(songToAdd);
+
+
+            }
+            // attachInputMicrophone();
+        }
+
+        public void addSongToPlayList(Song songToAdd)
+        {
+            ListViewItem songItem = new ListViewItem(songNumber.ToString());
+            songItem.SubItems.Add(songToAdd.title);
+            songItem.SubItems.Add(songToAdd.duration);
+            
+            
+            
+            if (playList.InvokeRequired)
+            {
+                Action action = () => playList.Items.Add(songItem);
+                playList.Invoke(action);
+            }
+            else
+            {
+                playList.Items.Add(songItem);
+            }
+            
+            tbYoutubeAddURL.Text = "";
+            songNumber++;
+
+            if (songToAdd.imageURL != null)
+            {
+                picYouTubePicture.ImageLocation = songToAdd.imageURL;
+            }
+            else
+            {
+                picYouTubePicture.ImageLocation = "";
+            }
+            setProgressBarState(false);
+            setLoadingIconState(false);
+
+        }
+        public void setProgressBarState(bool state)
+        {
+            progressBarYoutube.Visible = state;
+            lblLoading.Visible = state;
+        }
+
+        public void setLoadingIconState(bool state)
+        {
+            loadingIcon.Visible = state;
+            lblLoading.Visible = state;
+        }
+
+        public static double Convert100NanosecondsToMilliseconds(double nanoseconds)
+        {
+            // One million nanoseconds in 1 millisecond, 
+            // but we are passing in 100ns units...
+            return nanoseconds * 0.0001;
+        }
+
+        private void setDefaultVolume(float volume, float volume2)
+        {
+            if (setVolumeDelegateDAC != null)
+            {
+                setVolumeDelegateDAC(volume2);
+            }
+            if (setVolumeDelegateDefault != null)
+            {
+                setVolumeDelegateDefault(volume);
             }
         }
 
@@ -321,15 +399,12 @@ namespace SoundWiz
                 setVolumeDelegateDefault(volumeSlider.Volume);
             }
             label1.Text = ((int)(volumeSlider.Volume * 100)).ToString() + "%";
+            label1.Text = volumeSlider.Volume.ToString();
         }
 
         private void trackBarVolume_Scroll(object sender, EventArgs e)
         {
             float volume = (float)trackBarVolume.Value / 100;
-            if (setVolumeDelegateDAC != null)
-            {
-                setVolumeDelegateDAC(volume);
-            }
             if (setVolumeDelegateDefault != null)
             {
                 setVolumeDelegateDefault(volume);
@@ -337,33 +412,18 @@ namespace SoundWiz
 
             label1.Text = volume.ToString();
         }
-        /*
-        private List<ISampleProvider> CreateInputStream(string fileName)
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
         {
+            float volume = (float)trackBarVolumeDAC.Value / 100;
+            if (setVolumeDelegateDAC != null)
+            {
+                setVolumeDelegateDAC(volume);
+            }
 
-
-            this.fileWaveStreamDAC = CreateWaveStream(fileName);
-            var waveChannelDAC = new SampleChannel(this.fileWaveStreamDAC);
-            this.setVolumeDelegateDAC = (vol) => waveChannelDAC.Volume = vol;
-            waveChannelDAC.PreVolumeMeter += OnPreVolumeMeter;
-            var postVolumeMeterDAC = new MeteringSampleProvider(waveChannelDAC);
-            postVolumeMeterDAC.StreamVolume += OnPostVolumeMeter;
-
-
-            this.fileWaveStreamDefault = CreateWaveStream(fileName);
-            var waveChannelDefault = new SampleChannel(this.fileWaveStreamDefault);
-            this.setVolumeDelegateDefault = (vol) => waveChannelDefault.Volume = vol;
-            //waveChannel2.PreVolumeMeter += OnPreVolumeMeter;
-            var postVolumeMeterDefault = new MeteringSampleProvider(waveChannelDefault);
-            postVolumeMeterDefault.StreamVolume += OnPostVolumeMeter;
-
-
-            List<ISampleProvider> postVolumeMeters = new List<ISampleProvider>();
-            postVolumeMeters.Add(postVolumeMeterDAC);
-            postVolumeMeters.Add(postVolumeMeterDefault);
-            return postVolumeMeters;
+            label1.Text = volume.ToString();
         }
-        */
+
         public void OnPreVolumeMeter(object sender, StreamVolumeEventArgs e)
         {
             // we know it is stereo
@@ -424,14 +484,16 @@ namespace SoundWiz
             {
                 //fileWaveStreamDAC.CurrentTime = TimeSpan.FromSeconds(trackFileLocation.Value);
                 //fileWaveStreamDefault.CurrentTime = TimeSpan.FromSeconds(trackFileLocation.Value);
+
                 musicPlayer.setCurrentTime(trackFileLocation.Value);
+
             }
         }
 
         private void playerTimer_Tick(object sender, EventArgs e)
         {
             //if (waveOutToMe != null && fileWaveStreamDAC != null && waveOutToSkype != null)
-            if (musicPlayer.streamExists())
+            if (musicPlayer.streamExists() && musicPlayer.getPlaybackState() != PlaybackState.Stopped)
             {
                 TimeSpan currentTime = (musicPlayer.getPlaybackState() == PlaybackState.Stopped) ? TimeSpan.Zero : musicPlayer.getCurrentSongTime();
                 if (musicPlayer.getCurrentSongPosition() >= musicPlayer.getCurrentSongLength())
@@ -441,28 +503,72 @@ namespace SoundWiz
                 }
                 else
                 {
-                    trackFileLocation.Value = (int)currentTime.TotalSeconds;
+                    trackFileLocation.Value = (int)currentTime.TotalMilliseconds * 10;
                     lblCurrentTime.Text = String.Format("{0:00}:{1:00}", (int)currentTime.TotalMinutes, currentTime.Seconds);
+                    label3.Text = trackFileLocation.Value.ToString();
                 }
             }
             else
             {
                 trackFileLocation.Value = 0;
+                activatePlayButton();
             }
         }
 
         private void btnPause_Click(object sender, EventArgs e)
         {
             musicPlayer.pause();
-            System.Threading.Thread.Sleep(150);
-            btnPlay.Visible = true;
-            btnPlay.Enabled = true;
-            btnPause.Enabled = false;
-            btnPause.Visible = false;
+            //System.Threading.Thread.Sleep(150);
+            activatePlayButton();
 
         }
 
 
+        private void playList_SongSelected(object sender, MouseEventArgs e)
+        {
+            ListViewHitTestInfo hit = playList.HitTest(e.Location);
+            if (hit.Item != null)
+            {
+                
+                int songNumber = Convert.ToInt32(hit.Item.SubItems[0].Text) - 1;
+                musicPlayer.loadSongBySongNumber(songNumber);
+                btnPlay_Click(sender, e);
+
+                setDefaultVolume((float)trackBarVolume.Value / 100, (float)trackBarVolumeDAC.Value / 100);
+            };
+        }
+
+        private void activatePauseButton()
+        {
+            btnPlay.Visible = false;
+            btnPlay.Enabled = false;
+            btnPause.Enabled = true;
+            btnPause.Visible = true;
+        }
+
+        private void activatePlayButton()
+        {
+            btnPlay.Visible = true;
+            btnPlay.Enabled = true;
+            btnPause.Enabled = false;
+            btnPause.Visible = false;
+        }
+
+        ~Form1()
+        {
+
+
+            filePath = null;
+            setVolumeDelegateDAC = null;
+            setVolumeDelegateDefault = null;
+            InputFileFormats = null;
+            songNumber = 0;
+            webClient = null;
+            browser = null;
+            sourceStream = null;
+            waveOut = null;
+            musicPlayer = null;
+        }
 
     }
 }

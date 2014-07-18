@@ -10,15 +10,18 @@ C:\Users\Mark\Documents\Visual Studio 2013\Projects\SoundWiz\SoundWiz\obj\x86\De
 C:\Users\Mark\Documents\Visual Studio 2013\Projects\SoundWiz\SoundWiz\bin\Debug\Microsoft.ComponentModel.Composition.Initialization.Desktop.dll
 C:\Users\Mark\Documents\Visual Studio 2013\Projects\SoundWiz\SoundWiz\bin\Debug\System.ComponentModel.Composition.dll
 C:\Users\Mark\Documents\Visual Studio 2013\Projects\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.csprojResolveAssemblyReference.cache
-C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.Form1.resources
-C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.csproj.GenerateResource.Cache
 C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\NAudio.dll
-C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.Properties.Resources.resources
-C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.exe
 C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\SoundWiz.exe
-C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\SoundWiz.pdb
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Microsoft.WindowsAPICodePack.dll
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Microsoft.WindowsAPICodePack.Shell.dll
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.exe
 C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.pdb
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\SoundWiz.pdb
 C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Newtonsoft.Json.dll
-C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Microsoft.WindowsAPICodePack.pdb
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Microsoft.WindowsAPICodePack.Shell.pdb
 C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\NAudio.xml
-C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.csprojResolveAssemblyReference.cache
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.Form1.resources
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.Properties.Resources.resources
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.csproj.GenerateResource.Cache

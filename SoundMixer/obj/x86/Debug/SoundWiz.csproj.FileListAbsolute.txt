@@ -1,0 +1,49 @@
+C:\Users\Mark\Documents\Visual Studio 2013\Projects\SoundWiz\SoundWiz\bin\Debug\SoundWiz.exe
+C:\Users\Mark\Documents\Visual Studio 2013\Projects\SoundWiz\SoundWiz\bin\Debug\SoundWiz.pdb
+C:\Users\Mark\Documents\Visual Studio 2013\Projects\SoundWiz\SoundWiz\bin\Debug\NAudio.dll
+C:\Users\Mark\Documents\Visual Studio 2013\Projects\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.Form1.resources
+C:\Users\Mark\Documents\Visual Studio 2013\Projects\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.images.resources
+C:\Users\Mark\Documents\Visual Studio 2013\Projects\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.Properties.Resources.resources
+C:\Users\Mark\Documents\Visual Studio 2013\Projects\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.csproj.GenerateResource.Cache
+C:\Users\Mark\Documents\Visual Studio 2013\Projects\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.exe
+C:\Users\Mark\Documents\Visual Studio 2013\Projects\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.pdb
+C:\Users\Mark\Documents\Visual Studio 2013\Projects\SoundWiz\SoundWiz\bin\Debug\Microsoft.ComponentModel.Composition.Initialization.Desktop.dll
+C:\Users\Mark\Documents\Visual Studio 2013\Projects\SoundWiz\SoundWiz\bin\Debug\System.ComponentModel.Composition.dll
+C:\Users\Mark\Documents\Visual Studio 2013\Projects\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.csprojResolveAssemblyReference.cache
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\NAudio.dll
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\SoundWiz.exe
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Microsoft.WindowsAPICodePack.dll
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Microsoft.WindowsAPICodePack.Shell.dll
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.exe
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.pdb
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\SoundWiz.pdb
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Microsoft.WindowsAPICodePack.pdb
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Microsoft.WindowsAPICodePack.Shell.pdb
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\NAudio.xml
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.Form1.resources
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.Properties.Resources.resources
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.csproj.GenerateResource.Cache
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\SoundWiz.exe.config
+C:\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.csprojResolveAssemblyReference.cache
+H:\Misc\October 10, 2014 Windows 8 Failure - Backup\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Microsoft.WindowsAPICodePack.dll
+H:\Misc\October 10, 2014 Windows 8 Failure - Backup\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Microsoft.WindowsAPICodePack.Shell.dll
+H:\Misc\October 10, 2014 Windows 8 Failure - Backup\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\NAudio.dll
+H:\Misc\October 10, 2014 Windows 8 Failure - Backup\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Newtonsoft.Json.dll
+H:\Misc\October 10, 2014 Windows 8 Failure - Backup\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Microsoft.WindowsAPICodePack.pdb
+H:\Misc\October 10, 2014 Windows 8 Failure - Backup\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Microsoft.WindowsAPICodePack.Shell.pdb
+H:\Misc\October 10, 2014 Windows 8 Failure - Backup\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\NAudio.xml
+H:\Misc\October 10, 2014 Windows 8 Failure - Backup\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\Newtonsoft.Json.xml
+H:\Misc\October 10, 2014 Windows 8 Failure - Backup\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.csprojResolveAssemblyReference.cache
+H:\Misc\October 10, 2014 Windows 8 Failure - Backup\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundWiz.csproj.GenerateResource.Cache
+H:\Misc\October 10, 2014 Windows 8 Failure - Backup\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\SoundMixer.exe.config
+H:\Misc\October 10, 2014 Windows 8 Failure - Backup\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundMixer.Form1.resources
+H:\Misc\October 10, 2014 Windows 8 Failure - Backup\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundMixer.Properties.Resources.resources
+H:\Misc\October 10, 2014 Windows 8 Failure - Backup\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\SoundMixer.exe
+H:\Misc\October 10, 2014 Windows 8 Failure - Backup\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\bin\Debug\SoundMixer.pdb
+H:\Misc\October 10, 2014 Windows 8 Failure - Backup\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundMixer.exe
+H:\Misc\October 10, 2014 Windows 8 Failure - Backup\Users\Mark\Documents\GitHub\SoundWiz\SoundWiz\obj\x86\Debug\SoundMixer.pdb
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundWiz\bin\Debug\SoundMixer.exe.config
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundWiz\obj\x86\Debug\SoundMixer.exe
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundWiz\obj\x86\Debug\SoundMixer.pdb

@@ -1,4 +1,7 @@
-﻿namespace SoundMixer
+﻿using System;
+using System.Windows.Forms;
+
+namespace SoundMixer
 {
     partial class Form1
     {
@@ -18,6 +21,24 @@
                 components.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        /// <summary>
+        /// Make the window draggable without a border.
+        /// </summary>
+        /// <param name="m"></param>
+        protected override void WndProc(ref Message m)
+        {
+            switch (m.Msg)
+            {
+                case 0x84:
+                    base.WndProc(ref m);
+                    if ((int)m.Result == 0x1)
+                        m.Result = (IntPtr)0x2;
+                    return;
+            }
+
+            base.WndProc(ref m);
         }
 
         #region Windows Form Designer generated code
@@ -53,7 +74,6 @@
             this.picYouTubePicture = new System.Windows.Forms.PictureBox();
             this.btnOpenFile = new System.Windows.Forms.PictureBox();
             this.playerTimer = new System.Windows.Forms.Timer(this.components);
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.playList = new System.Windows.Forms.ListView();
             this.songNumberCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.songNameCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -62,10 +82,12 @@
             this.lblLoading = new System.Windows.Forms.Label();
             this.muteMic = new System.Windows.Forms.CheckBox();
             this.pnlDevices = new System.Windows.Forms.Panel();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.InputOutputMixerBox = new System.Windows.Forms.GroupBox();
             this.cbOutputDevices = new System.Windows.Forms.ComboBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.MixedOutputBox = new System.Windows.Forms.GroupBox();
             this.cbMusicOutput = new System.Windows.Forms.ComboBox();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnPause)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnPrevious)).BeginInit();
@@ -79,13 +101,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.picYouTubePicture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnOpenFile)).BeginInit();
             this.pnlDevices.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.InputOutputMixerBox.SuspendLayout();
+            this.MixedOutputBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // cbInputDevices
             // 
             this.cbInputDevices.BackColor = System.Drawing.Color.GreenYellow;
+            this.cbInputDevices.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cbInputDevices.FormattingEnabled = true;
             this.cbInputDevices.Location = new System.Drawing.Point(6, 19);
             this.cbInputDevices.Name = "cbInputDevices";
@@ -336,13 +359,6 @@
             this.playerTimer.Interval = 250;
             this.playerTimer.Tick += new System.EventHandler(this.playerTimer_Tick);
             // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(665, 57);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 23;
-            // 
             // playList
             // 
             this.playList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -406,54 +422,64 @@
             // 
             // pnlDevices
             // 
-            this.pnlDevices.Controls.Add(this.groupBox2);
-            this.pnlDevices.Controls.Add(this.groupBox1);
+            this.pnlDevices.Controls.Add(this.InputOutputMixerBox);
+            this.pnlDevices.Controls.Add(this.MixedOutputBox);
             this.pnlDevices.Location = new System.Drawing.Point(778, 484);
             this.pnlDevices.Name = "pnlDevices";
             this.pnlDevices.Size = new System.Drawing.Size(293, 180);
             this.pnlDevices.TabIndex = 30;
             // 
-            // groupBox2
+            // InputOutputMixerBox
             // 
-            this.groupBox2.Controls.Add(this.cbInputDevices);
-            this.groupBox2.Controls.Add(this.cbOutputDevices);
-            this.groupBox2.Controls.Add(this.muteMic);
-            this.groupBox2.ForeColor = System.Drawing.Color.White;
-            this.groupBox2.Location = new System.Drawing.Point(9, 9);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(281, 86);
-            this.groupBox2.TabIndex = 30;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Input/Output";
+            this.InputOutputMixerBox.Controls.Add(this.cbInputDevices);
+            this.InputOutputMixerBox.Controls.Add(this.cbOutputDevices);
+            this.InputOutputMixerBox.Controls.Add(this.muteMic);
+            this.InputOutputMixerBox.ForeColor = System.Drawing.Color.White;
+            this.InputOutputMixerBox.Location = new System.Drawing.Point(9, 9);
+            this.InputOutputMixerBox.Name = "InputOutputMixerBox";
+            this.InputOutputMixerBox.Size = new System.Drawing.Size(281, 86);
+            this.InputOutputMixerBox.TabIndex = 30;
+            this.InputOutputMixerBox.TabStop = false;
+            this.InputOutputMixerBox.Text = "Input/Output";
             // 
             // cbOutputDevices
             // 
             this.cbOutputDevices.BackColor = System.Drawing.Color.GreenYellow;
+            this.cbOutputDevices.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbOutputDevices.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cbOutputDevices.FormattingEnabled = true;
             this.cbOutputDevices.Location = new System.Drawing.Point(6, 46);
             this.cbOutputDevices.Name = "cbOutputDevices";
             this.cbOutputDevices.Size = new System.Drawing.Size(153, 21);
             this.cbOutputDevices.TabIndex = 1;
             // 
-            // groupBox1
+            // MixedOutputBox
             // 
-            this.groupBox1.Controls.Add(this.cbMusicOutput);
-            this.groupBox1.ForeColor = System.Drawing.Color.White;
-            this.groupBox1.Location = new System.Drawing.Point(9, 101);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(281, 68);
-            this.groupBox1.TabIndex = 30;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Music Output";
+            this.MixedOutputBox.Controls.Add(this.cbMusicOutput);
+            this.MixedOutputBox.ForeColor = System.Drawing.Color.White;
+            this.MixedOutputBox.Location = new System.Drawing.Point(9, 101);
+            this.MixedOutputBox.Name = "MixedOutputBox";
+            this.MixedOutputBox.Size = new System.Drawing.Size(281, 68);
+            this.MixedOutputBox.TabIndex = 30;
+            this.MixedOutputBox.TabStop = false;
+            this.MixedOutputBox.Text = "Music Output";
             // 
             // cbMusicOutput
             // 
             this.cbMusicOutput.BackColor = System.Drawing.Color.GreenYellow;
+            this.cbMusicOutput.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cbMusicOutput.FormattingEnabled = true;
             this.cbMusicOutput.Location = new System.Drawing.Point(6, 19);
             this.cbMusicOutput.Name = "cbMusicOutput";
             this.cbMusicOutput.Size = new System.Drawing.Size(153, 21);
             this.cbMusicOutput.TabIndex = 1;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(665, 57);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(100, 20);
+            this.textBox2.TabIndex = 23;
             // 
             // Form1
             // 
@@ -478,7 +504,9 @@
             this.Controls.Add(this.trackFileLocation);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnOpenFile);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Skype Mixer";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -494,9 +522,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.picYouTubePicture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnOpenFile)).EndInit();
             this.pnlDevices.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
+            this.InputOutputMixerBox.ResumeLayout(false);
+            this.InputOutputMixerBox.PerformLayout();
+            this.MixedOutputBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -528,7 +556,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer playerTimer;
         private System.Windows.Forms.PictureBox btnPause;
-        private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.ListView playList;
         private System.Windows.Forms.ColumnHeader songNameCol;
         private System.Windows.Forms.ColumnHeader songDurationCol;
@@ -539,9 +566,11 @@
         private System.Windows.Forms.CheckBox muteMic;
         private System.Windows.Forms.Panel pnlDevices;
         private System.Windows.Forms.ComboBox cbOutputDevices;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox MixedOutputBox;
         private System.Windows.Forms.ComboBox cbMusicOutput;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox InputOutputMixerBox;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private TextBox textBox2;
     }
 }
 

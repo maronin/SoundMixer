@@ -136,10 +136,10 @@ namespace SoundMixer
 
                 //play out to skype
 
-                var waveOut2 = new WaveOutEvent();
-                waveOut2.DeviceNumber = virtualCableDeviceNumber;
-                waveOut2.DesiredLatency = 150;
-                waveOutToSkype = waveOut2;
+                var waveOutTemp = new WaveOutEvent();
+                waveOutTemp.DeviceNumber = virtualCableDeviceNumber;
+                waveOutTemp.DesiredLatency = 150;
+                waveOutToSkype = waveOutTemp;
 
                 // waveOutToSkype = new NAudio.Wave.WaveOut();
                 //   waveOutToSkype.DeviceNumber = 3; //digital audio cable

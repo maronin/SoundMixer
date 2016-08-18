@@ -4,3 +4,17 @@ C:\Users\Mark\Documents\GitHub\SoundMixer\SoundWiz\obj\x86\Debug\SoundMixer.pdb
 C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\bin\Debug\SoundMixer.exe.config
 C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\obj\x86\Debug\SoundMixer.exe
 C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\obj\x86\Debug\SoundMixer.pdb
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\bin\Debug\SoundMixer.exe
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\bin\Debug\SoundMixer.pdb
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\bin\Debug\Microsoft.WindowsAPICodePack.dll
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\bin\Debug\Microsoft.WindowsAPICodePack.Shell.dll
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\bin\Debug\NAudio.dll
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\bin\Debug\Microsoft.WindowsAPICodePack.pdb
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\bin\Debug\Microsoft.WindowsAPICodePack.Shell.pdb
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\bin\Debug\NAudio.xml
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\obj\x86\Debug\SoundMixer.csprojResolveAssemblyReference.cache
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\obj\x86\Debug\SoundMixer.Form1.resources
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\obj\x86\Debug\SoundMixer.Properties.Resources.resources
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\obj\x86\Debug\SoundMixer.csproj.GenerateResource.Cache

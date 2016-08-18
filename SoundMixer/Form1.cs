@@ -52,7 +52,7 @@ namespace SoundMixer
             InputFileFormats.Add(new FileFormats("AIFF", ".aiff"));
             //backgroundWorkerOpenFile.WorkerReportsProgress = true;
             //backgroundWorkerOpenFile.WorkerSupportsCancellation = true;
-            LoadWasapiDevicesCombo();
+            populateInputDevices();
             populateOutputDevices();
 
             //populate the combobox with current input devices (mic, digital cable, etc.)
@@ -72,7 +72,16 @@ namespace SoundMixer
 
             cbInputDevices.SelectedIndex = SoundMixer.Properties.Settings.Default.micInput;
             cbOutputDevices.SelectedIndex = SoundMixer.Properties.Settings.Default.micOutput;
-            cbMusicOutput.SelectedIndex = SoundMixer.Properties.Settings.Default.musicOutput;
+            try
+            {
+                cbMusicOutput.SelectedIndex = SoundMixer.Properties.Settings.Default.musicOutput;
+            }
+            catch
+            {
+                cbMusicOutput.SelectedIndex = 0;
+                SoundMixer.Properties.Settings.Default.musicOutput = 0;
+                SoundMixer.Properties.Settings.Default.Save();
+            }
             recordingThread = new Thread(attachInputMicrophone);
             recordingThread.Start();
 
@@ -171,6 +180,10 @@ namespace SoundMixer
 
         }
 
+        
+        /// <summary>
+        /// Populates the combo boxes with the current availble output devices (speakers, headphones, monitors, etc.)
+        /// </summary>
         private void populateOutputDevices()
         {
             for (int deviceId = 0; deviceId < WaveOut.DeviceCount; deviceId++)
@@ -192,7 +205,10 @@ namespace SoundMixer
             }
         }
 
-        private void LoadWasapiDevicesCombo()
+        /// <summary>
+        /// Populates the combo boxe with the input devices (mic, etc.)
+        /// </summary>
+        private void populateInputDevices()
         {
             MMDeviceEnumerator deviceEnum = new MMDeviceEnumerator();
             MMDeviceCollection deviceCol = deviceEnum.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active);
@@ -204,6 +220,7 @@ namespace SoundMixer
                 devices.Add(device);
             }
 
+            //Give each item in the list of devices a name and a value. Add it to the combobox.
             foreach (var item in devices)
             {
                 ComboboxItem cbItem = new ComboboxItem();
@@ -215,11 +232,18 @@ namespace SoundMixer
 
                 cbItem.Text = productName;
                 cbItem.Value = item;
+
                 cbInputDevices.Items.Add(cbItem);
             }
 
         }
 
+        /// <summary>
+        /// When the combo box is changed, change the recording thread to a new one. 
+        /// Also save the choice for when the program is opened again.
+        /// </summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">Event argument</param>
         public void cbInputDevices_SelectedIndexChanged(object sender, EventArgs e)
         {
             recordingThread = new Thread(attachInputMicrophone);
@@ -234,6 +258,9 @@ namespace SoundMixer
             progressBarYoutube.Value = e.ProgressPercentage;
         }
 
+        /// <summary>
+        /// Stop all playback and recording of the mixer. Switch to the new input device and start recording.
+        /// </summary>
         public void attachInputMicrophone()
         {
             if (waveOut != null)
@@ -290,8 +317,8 @@ namespace SoundMixer
             }
 
             //sourceStream.WaveFormat = new WaveFormat(8000, 2);
-            //set the input waveIn to the input device selected
 
+            //set the input waveIn to the input device selected
             WaveInProvider waveIn = new WaveInProvider(sourceStream);
 
 
@@ -316,10 +343,6 @@ namespace SoundMixer
 
             waveOut.Play();
             sourceStream.StartRecording();
-
-
-
-
 
         }
 
@@ -394,8 +417,6 @@ namespace SoundMixer
             ListViewItem songItem = new ListViewItem(songNumber.ToString());
             songItem.SubItems.Add(songToAdd.title);
             songItem.SubItems.Add(songToAdd.duration);
-
-
 
             if (playList.InvokeRequired)
             {

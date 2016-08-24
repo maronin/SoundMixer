@@ -693,5 +693,24 @@ namespace SoundMixer
             
         }
 
+        private void MixedOutputBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblCurrentTime_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblTotalTime_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

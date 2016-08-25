@@ -26,36 +26,36 @@ namespace SoundMixer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        public int micInput {
+        public int micInputIndex {
             get {
-                return ((int)(this["micInput"]));
+                return ((int)(this["micInputIndex"]));
             }
             set {
-                this["micInput"] = value;
+                this["micInputIndex"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int micOutput {
+        public int micOutputIndex {
             get {
-                return ((int)(this["micOutput"]));
+                return ((int)(this["micOutputIndex"]));
             }
             set {
-                this["micOutput"] = value;
+                this["micOutputIndex"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int musicOutput {
+        public int musicOutputIndex {
             get {
-                return ((int)(this["musicOutput"]));
+                return ((int)(this["musicOutputIndex"]));
             }
             set {
-                this["musicOutput"] = value;
+                this["musicOutputIndex"] = value;
             }
         }
     }

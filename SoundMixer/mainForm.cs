@@ -21,11 +21,13 @@ using Microsoft.WindowsAPICodePack.Shell;
 using NAudio.CoreAudioApi;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
+
 namespace SoundMixer
 {
 
 
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         public static readonly Regex YoutubeVideoRegex = new Regex(@"youtu(?:\.be|be\.com)/(?:.*v(?:/|=)|(?:.*/)?)([a-zA-Z0-9-_]+)", RegexOptions.IgnoreCase);
         private string filePath = null;
@@ -41,9 +43,32 @@ namespace SoundMixer
         YouTubeDownloader youTubeDownloader;
         double testingNumber = 20.034;
         Thread recordingThread;
-        public Form1()
+        private SettingsForm settingsForm = null;
+
+        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+        private static extern IntPtr CreateRoundRectRgn
+        (
+            int nLeftRect, // x-coordinate of upper-left corner
+            int nTopRect, // y-coordinate of upper-left corner
+            int nRightRect, // x-coordinate of lower-right corner
+            int nBottomRect, // y-coordinate of lower-right corner
+            int nWidthEllipse, // height of ellipse
+            int nHeightEllipse // width of ellipse
+        );
+
+        public MainForm()
         {
+            settingsForm = new SettingsForm();
+            
+            settingsForm.Show();
+            settingsForm.Location = new Point(0, -1000);
+            settingsForm.Hide();
+            settingsForm.ShowInTaskbar = false;
+            settingsForm.Owner = this;
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.None;
+            Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 5, 5)); //rounded corners
+
             Application.ApplicationExit += Application_ApplicationExit;
             //initialize supported file formats
             InputFileFormats = new List<FileFormats>();
@@ -70,23 +95,23 @@ namespace SoundMixer
             } */
 
 
-            cbInputDevices.SelectedIndex = SoundMixer.Properties.Settings.Default.micInput;
-            cbOutputDevices.SelectedIndex = SoundMixer.Properties.Settings.Default.micOutput;
+            settingsForm.cbInput.SelectedIndex = SoundMixer.Properties.Settings.Default.micInputIndex;
+            settingsForm.cbOutput.SelectedIndex = SoundMixer.Properties.Settings.Default.micOutputIndex;
             try
             {
-                cbMusicOutput.SelectedIndex = SoundMixer.Properties.Settings.Default.musicOutput;
+                settingsForm.cbMixedOutput.SelectedIndex = SoundMixer.Properties.Settings.Default.micOutputIndex;
             }
             catch
             {
-                cbMusicOutput.SelectedIndex = 0;
-                SoundMixer.Properties.Settings.Default.musicOutput = 0;
+                settingsForm.cbMixedOutput.SelectedIndex = 0;
+                SoundMixer.Properties.Settings.Default.micOutputIndex = 0;
                 SoundMixer.Properties.Settings.Default.Save();
             }
             recordingThread = new Thread(attachInputMicrophone);
             recordingThread.Start();
 
-            cbInputDevices.SelectedIndexChanged += cbInputDevices_SelectedIndexChanged;
-            cbOutputDevices.SelectedIndexChanged += cbOutputDevices_SelectedIndexChanged;
+            settingsForm.cbInput.SelectedIndexChanged += cbInputDevices_SelectedIndexChanged;
+            settingsForm.cbOutput.SelectedIndexChanged += cbOutputDevices_SelectedIndexChanged;
             //initialize browser youtube stuff here.
             webClient = new WebClient();
             browser = new WebBrowser();
@@ -96,13 +121,13 @@ namespace SoundMixer
             tbYoutubeAddURL.KeyUp += tbYoutubeAddURL_KeyUp;
             //loadingIcon.Image = Image.FromFile(@"C:\Users\Mark\Documents\Visual Studio 2013\Projects\YouTube to MP3\images\loading.gif");
 
-            musicPlayer = new MusicPlayer(this, cbMusicOutput.SelectedIndex);
+            musicPlayer = new MusicPlayer(this, settingsForm.cbMixedOutput.SelectedIndex);
             youTubeDownloader = new YouTubeDownloader(this, musicPlayer);
 
             //volumeSlider.Volume = (float)0.254;
 
             playList.MouseDoubleClick += playList_SongSelected;
-            cbMusicOutput.SelectedIndexChanged += cbMusicOutput_SelectedIndexChanged;
+            settingsForm.cbMixedOutput.SelectedIndexChanged += cbMusicOutput_SelectedIndexChanged;
 
         }
 
@@ -111,7 +136,7 @@ namespace SoundMixer
             recordingThread = new Thread(attachInputMicrophone);
             recordingThread.Start();
 
-            SoundMixer.Properties.Settings.Default.micOutput = cbOutputDevices.SelectedIndex;
+            SoundMixer.Properties.Settings.Default.micOutputIndex = settingsForm.cbOutput.SelectedIndex;
             SoundMixer.Properties.Settings.Default.Save();
         }
 
@@ -195,13 +220,13 @@ namespace SoundMixer
                 if (index > 0)
                     productName = productName.Substring(0, index);
 
-                cbOutputDevices.Items.Add(String.Format("{0}", productName));
-                cbMusicOutput.Items.Add(String.Format("{0}", productName));
+                settingsForm.cbOutput.Items.Add(String.Format("{0}", productName));
+                settingsForm.cbMixedOutput.Items.Add(String.Format("{0}", productName));
             }
-            if (cbOutputDevices.Items.Count > 0)
+            if (settingsForm.cbOutput.Items.Count > 0)
             {
-                cbOutputDevices.SelectedIndex = 0;
-                cbMusicOutput.SelectedIndex = 0;
+                settingsForm.cbOutput.SelectedIndex = 0;
+                settingsForm.cbMixedOutput.SelectedIndex = 0;
             }
         }
 
@@ -233,7 +258,7 @@ namespace SoundMixer
                 cbItem.Text = productName;
                 cbItem.Value = item;
 
-                cbInputDevices.Items.Add(cbItem);
+                settingsForm.cbInput.Items.Add(cbItem);
             }
 
         }
@@ -249,7 +274,7 @@ namespace SoundMixer
             recordingThread = new Thread(attachInputMicrophone);
             recordingThread.Start();
 
-            SoundMixer.Properties.Settings.Default.micInput = cbInputDevices.SelectedIndex;
+            SoundMixer.Properties.Settings.Default.micInputIndex = settingsForm.cbInput.SelectedIndex;
             SoundMixer.Properties.Settings.Default.Save();
         }
 
@@ -280,14 +305,14 @@ namespace SoundMixer
 
             int deviceNumber = -1;
 
-            if (cbInputDevices.InvokeRequired)
+            if (settingsForm.cbInput.InvokeRequired)
             {
-                Action action = () => deviceNumber = cbInputDevices.SelectedIndex;
-                cbInputDevices.Invoke(action);
+                Action action = () => deviceNumber = settingsForm.cbInput.SelectedIndex;
+                settingsForm.cbInput.Invoke(action);
             }
             else
             {
-                deviceNumber = cbInputDevices.SelectedIndex;
+                deviceNumber = settingsForm.cbInput.SelectedIndex;
             }
 
             // int deviceNumber = cbInputDevices.SelectedIndex;
@@ -299,18 +324,18 @@ namespace SoundMixer
             //sourceStream.WaveFormat = new WaveFormat(16000, 1);
             if (deviceNumber == -1)
             {
-                sourceStream = new WasapiCapture((MMDevice)cbInputDevices.Items[0]);
+                sourceStream = new WasapiCapture((MMDevice)settingsForm.cbInput.Items[0]);
             }
             else
             {
-                if (cbInputDevices.InvokeRequired)
+                if (settingsForm.cbInput.InvokeRequired)
                 {
-                    Action action = () => sourceStream = new WasapiCapture((MMDevice)(cbInputDevices.SelectedItem as ComboboxItem).Value);
-                    cbInputDevices.Invoke(action);
+                    Action action = () => sourceStream = new WasapiCapture((MMDevice)(settingsForm.cbInput.SelectedItem as ComboboxItem).Value);
+                    settingsForm.cbInput.Invoke(action);
                 }
                 else
                 {
-                    sourceStream = new WasapiLoopbackCapture((MMDevice)cbInputDevices.SelectedItem);
+                    sourceStream = new WasapiLoopbackCapture((MMDevice)settingsForm.cbInput.SelectedItem);
 
                 }
 
@@ -326,14 +351,14 @@ namespace SoundMixer
 
             //waveOut = Where the mic output will go
             waveOut = new WaveOut();
-            if (cbOutputDevices.InvokeRequired)
+            if (settingsForm.cbOutput.InvokeRequired)
             {
-                Action action = () => waveOut.DeviceNumber = cbOutputDevices.SelectedIndex; ;
-                cbOutputDevices.Invoke(action);
+                Action action = () => waveOut.DeviceNumber = settingsForm.cbOutput.SelectedIndex; ;
+                settingsForm.cbOutput.Invoke(action);
             }
             else
             {
-                waveOut.DeviceNumber = cbOutputDevices.SelectedIndex;
+                waveOut.DeviceNumber = settingsForm.cbOutput.SelectedIndex;
 
             }
             //waveOut.DeviceNumber = 0;//digital audio cable
@@ -654,7 +679,7 @@ namespace SoundMixer
             btnPause.Visible = false;
         }
 
-        ~Form1()
+        ~MainForm()
         {
 
 
@@ -670,9 +695,10 @@ namespace SoundMixer
             musicPlayer = null;
         }
 
+        /*
         private void muteMic_CheckedChanged(object sender, EventArgs e)
         {
-            if (muteMic.Checked)
+            if (settingsForm.mic.Checked)
             {
                 sourceStream.StopRecording();
                 //waveOut.Pause();
@@ -682,13 +708,13 @@ namespace SoundMixer
                 //waveOut.Play();
                 sourceStream.StartRecording();
             }
-        }
+        }*/
 
         private void cbMusicOutput_SelectedIndexChanged(object sender, EventArgs e)
         {
-            musicPlayer.virtualCableDeviceNumber = cbMusicOutput.SelectedIndex;
+            musicPlayer.virtualCableDeviceNumber = settingsForm.cbMixedOutput.SelectedIndex;
             musicPlayer.loadSongBySongNumber(musicPlayer.currentSongNumber);
-            SoundMixer.Properties.Settings.Default.musicOutput = cbMusicOutput.SelectedIndex;
+            SoundMixer.Properties.Settings.Default.micOutputIndex = settingsForm.cbMixedOutput.SelectedIndex;
             SoundMixer.Properties.Settings.Default.Save();
             
         }
@@ -711,6 +737,22 @@ namespace SoundMixer
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.Application.Exit();
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            settingsForm.Show();
+            settingsForm.Location = this.Location;
+        }
+
+        private void MainForm_Move(object sender, EventArgs e)
+        {
+            settingsForm.Location = this.Location;
         }
     }
 }

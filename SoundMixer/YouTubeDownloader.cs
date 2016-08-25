@@ -17,10 +17,10 @@ namespace SoundMixer
         public static readonly Regex YoutubeVideoRegex = new Regex(@"youtu(?:\.be|be\.com)/(?:.*v(?:/|=)|(?:.*/)?)([a-zA-Z0-9-_]+)", RegexOptions.IgnoreCase);
         private WebClient webClient;
         private WebBrowser webBrowser;
-        private Form1 _form;
+        private MainForm _form;
         private Song youTubeSong;
         private MusicPlayer musicPlayer;
-        public YouTubeDownloader(Form1 _form, MusicPlayer musicPlayer)
+        public YouTubeDownloader(MainForm _form, MusicPlayer musicPlayer)
         {
             this._form = _form;
             webClient = new WebClient();

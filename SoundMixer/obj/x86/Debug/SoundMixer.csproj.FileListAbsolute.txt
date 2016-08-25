@@ -15,6 +15,7 @@ C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\bin\Debug\Microsoft.Windows
 C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\bin\Debug\NAudio.xml
 C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\obj\x86\Debug\SoundMixer.csprojResolveAssemblyReference.cache
-C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\obj\x86\Debug\SoundMixer.Form1.resources
 C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\obj\x86\Debug\SoundMixer.Properties.Resources.resources
 C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\obj\x86\Debug\SoundMixer.csproj.GenerateResource.Cache
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\obj\x86\Debug\SoundMixer.mainForm.resources
+C:\Users\Mark\Documents\GitHub\SoundMixer\SoundMixer\obj\x86\Debug\SoundMixer.SettingsForm.resources

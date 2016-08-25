@@ -21,12 +21,12 @@ namespace SoundMixer
         private WaveStream fileWaveStreamDAC;
         private WaveStream fileWaveStreamDefault;
         private IWavePlayer waveOutToMe, waveOutToSkype; //IwaveOutPlayer!!!
-        private Form1 _form;
+        private MainForm _form;
         public bool isPlaying = false;
         public int currentSongNumber;
         public int totalSongs = 0;
         public int virtualCableDeviceNumber = 0;
-        public MusicPlayer(Form1 _form, int virtualCableDeviceNumber)
+        public MusicPlayer(MainForm _form, int virtualCableDeviceNumber)
         {
             this._form = _form;
             playerQueue = new List<Song>();

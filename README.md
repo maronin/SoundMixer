@@ -1,3 +1,6 @@
+#NO LONGER ACTIVE
+Refer to [EZDJ](https://github.com/maronin/EZDJ/tree/master) instead. All future updates will be there. 
+
 ##Description
 
 This is a project that was inspired by wanting to share music with my friends while I played video games with them. This application is written in C# and uses an open source audio and MIDI library called [NAudio](https://naudio.codeplex.com/).
@@ -15,4 +18,3 @@ You'll need to download [Virtual Audio Cable](http://software.muzychenko.net/eng
 For the application you are going to use to communicate with your freinds (Skype, Discord, etc.), select Line 1 as your input source.
 
 ![](http://i.imgur.com/wf8IUSe.png)
-
